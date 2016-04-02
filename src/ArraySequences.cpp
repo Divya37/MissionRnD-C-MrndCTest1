@@ -32,6 +32,83 @@ Difficulty : Medium
 #include <math.h>
 
 int * find_sequences(int *arr, int len){
-	//Return final array which has 6indexes [AP1_S,AP1_E,AP2_S,AP2_E,GP1_S,GP2_E]
-	return NULL;
+
+	if (arr == NULL || len<0)
+		return NULL;
+
+	int *res;
+	res = (int *)malloc(sizeof(int) * 7);
+	int diff1 = 0, diff2 = 0,r_val=0,flag1=0,flag2=0,flag3=0;
+	int flag1_end = 0, flag2_end = 0, flag3_end = 0;
+	
+	for (int i = 0; i < len-2; i++)
+	{
+		if (flag1==0 && abs(arr[i] - arr[i + 1]) == abs(arr[i + 1] - arr[i + 2]))
+		{
+			flag1 = 1;
+			diff1 = abs(arr[i] - arr[i + 1]);
+			res[0] = i;
+
+		}
+		if (flag1 == 1 && flag2 == 0 && abs(arr[i] - arr[i + 1]) == abs(arr[i + 1] - arr[i + 2]) && abs(arr[i] - arr[i + 1])!=diff1)
+		{
+			flag2 = 1;
+			diff2 = abs(arr[i] - arr[i + 1]);
+			res[2] = i;
+
+		}
+		
+		if (flag3=0 && arr[i]==arr[i+1])
+		{
+			flag3 = 1;
+			r_val = 1;
+			res[4] = i;
+			if (flag1 == 1 && flag2 == 0)
+			{
+				flag2 = 1;
+				diff2 = 0;
+				res[2] = i;
+			}
+			if (flag1 == 0 && flag2 == 0)
+			{
+				flag1 = 1;
+				diff1 = 0;
+				res[0] = i;
+			}
+
+		}
+
+		if (flag3 == 0 && arr[i] != 0 && arr[i + 1] != 0 && arr[i + 2] != 0)
+		{
+			if ((arr[i + 1] / arr[i]) == (arr[i + 2] / arr[i+1]))
+			{
+				flag3 = 1;
+				r_val = arr[i + 1] / arr[i];
+				res[4] = i;
+			}
+		}
+
+		if (flag3 == 1 && arr[i] != 0 && arr[i + 1] != 0 && flag3_end==0)
+		{
+			if ((arr[i + 1] / arr[i]) != (arr[i + 2] / arr[i + 1]))
+			{
+				flag3_end = 1;
+				res[5] = i;
+			}
+		}		
+		if (abs(arr[i] - arr[i + 1]) != diff1 && flag1 == 1 && flag1_end==0)
+		{
+			res[1] = i;
+			flag1_end = 1;
+		}
+		if (abs(arr[i] - arr[i + 1]) != diff2 && flag2 == 1 && flag2_end == 0)
+		{
+			res[3] = i;
+			flag2_end = 1;
+
+		}
+	}
+	for (int i = 0; i < 6; i++)
+		printf("%d\t", res[i]);
+	return res;
 }
